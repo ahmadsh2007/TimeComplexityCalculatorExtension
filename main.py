@@ -7,7 +7,6 @@ import google.generativeai as genai
 
 app = FastAPI()
 
-# Allow connections from anywhere (important for VS Code extensions)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,7 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure AI with the API Key from Environment Variables
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 class CodeInput(BaseModel):
@@ -28,9 +26,8 @@ def health():
 @app.post("/analyze")
 def analyze_code(payload: CodeInput):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3-flash-preview')
         
-        # Strict prompt to ensure clean output
         prompt = f"""
         You are an expert algorithm analyst. 
         Analyze the Time and Space complexity of the following C++ code.
@@ -47,12 +44,10 @@ def analyze_code(payload: CodeInput):
         """
         
         response = model.generate_content(prompt)
-        # Clean up if AI adds markdown backticks
         text_response = response.text.replace("```json", "").replace("```", "").strip()
         
         return {"raw_output": text_response}
     except Exception as e:
-        # Fallback if something breaks
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="AI Analysis Failed")
 
