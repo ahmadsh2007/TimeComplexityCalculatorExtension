@@ -18,6 +18,7 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 class CodeInput(BaseModel):
     code: str
+    model: str = "gemini-flash-latest"
 
 @app.get("/")
 def health():
@@ -26,7 +27,7 @@ def health():
 @app.post("/analyze")
 def analyze_code(payload: CodeInput):
     try:
-        model = genai.GenerativeModel('gemini-3-flash-preview')
+        model = genai.GenerativeModel(payload.model)
         
         prompt = f"""
         You are an expert algorithm analyst. 
