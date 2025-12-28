@@ -32,20 +32,36 @@ def get_gemini_response(code_hash: int, code: str, model_name: str):
         
         prompt = f"""
         Role: Senior Algorithm Analyst.
-        Task: Analyze the Time and Space complexity of the C++ code.
+        Task: Analyze Time and Space complexity. Determine confidence based on code clarity.
 
         [EXAMPLES]
         Input: "for(int i=0; i<n; i++) {{ ... }}"
-        Output: {{ "time_complexity": "O(N)", "space_complexity": "O(1)", "explanation": "Single loop running N times." }}
+        Output: {{ 
+            "time_complexity": "O(N)", 
+            "time_confidence": "High",
+            "space_complexity": "O(1)", 
+            "space_confidence": "High",
+            "explanation": "Simple linear loop." 
+        }}
 
-        Input: "int fib(n) {{ if(n<=1) return 1; return fib(n-1) + fib(n-2); }}"
-        Output: {{ "time_complexity": "O(2^N)", "space_complexity": "O(N)", "explanation": "Recursive calls branch twice per step." }}
+        Input: "void complexFunc() {{ /* obscure recursive math with random jumps */ }}"
+        Output: {{ 
+            "time_complexity": "O(N^2)", 
+            "time_confidence": "Low",
+            "space_complexity": "O(N)", 
+            "space_confidence": "Medium",
+            "explanation": "Control flow is ambiguous." 
+        }}
 
         [YOUR TURN]
-        Analyze the following code. Return ONLY valid JSON in this exact format:
+        Analyze the code. Return ONLY JSON.
+        Confidence levels: "High" (Sure), "Medium" (Likely), "Low" (Guess).
+        
         {{
             "time_complexity": "O(...)",
+            "time_confidence": "...",
             "space_complexity": "O(...)",
+            "space_confidence": "...",
             "explanation": "One sentence reason."
         }}
 
